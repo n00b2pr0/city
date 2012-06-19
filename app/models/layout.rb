@@ -10,6 +10,7 @@ class Layout < ActiveRecord::Base
   # relationships
   belongs_to :site
   has_many :pages
+  has_many :articles
   has_many :renders, :as => :renderable
 
 

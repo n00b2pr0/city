@@ -1,0 +1,33 @@
+<%= form_for [:admin, @site, @article], :html => {:class => "full"} do |f| %>
+
+  <%= f.label :title %>
+  <%= f.text_field :title %>
+
+  <%= f.label :path %>
+  <%= f.text_field :path %>
+
+  <%= f.label :body %>
+  <%= f.text_area :body %>
+
+  <%= f.label :footer %>
+  <%= f.text_area :footer %>
+
+  <%= f.label :author %>
+  <%= f.text_field :author %>
+
+  <%= f.label :tags %>
+  <%= f.text_field :tags %>
+
+  <%= f.label :notes %>
+  <%= f.text_field :notes %>
+
+  <%= f.label :status %>
+  <%= f.text_field :status %>
+
+  <%= f.label "Layout" %>
+  <%= f.select :layout_id, @site.layouts.collect{ |l| [l.title, l.id] } %>
+
+  <div class="form-actions">
+    <%= f.submit :class => "btn btn-success" %>
+  </div>
+<% end %>

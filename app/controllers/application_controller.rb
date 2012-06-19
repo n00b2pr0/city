@@ -11,6 +11,7 @@ class ApplicationController < ActionController::Base
     logger.info request.fullpath
     if site
       render_html(site, request.fullpath.sub("/", ""))
+      render_html_article(site, request.fullpath.sub("/", ""))
     else
       site_not_found
     end
@@ -30,6 +31,28 @@ class ApplicationController < ActionController::Base
           page.create_render
         end
         logger.info "Rendering page from Redis"
+        render :inline => redis_render
+
+      end
+    else
+      render :inline => "Page not found"
+    end
+  end
+
+  def render_html_article(site, path)
+    logger.debug site.inspect
+    article = site.articles.where(path: path).first
+    if article
+      if article.layout # render the article within the layout
+        html = $redis.get(article.layout.redis_hash).sub("{{ page }}", $redis.get(article.redis_hash))
+        render :inline => html
+      else # render just a article with no layout
+
+        redis_render = $redis.get(article.redis_hash)
+        if !redis_render
+          article.create_render
+        end
+        logger.info "Rendering article from Redis"
         render :inline => redis_render
 
       end

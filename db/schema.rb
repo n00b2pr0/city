@@ -11,7 +11,23 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120604150022) do
+ActiveRecord::Schema.define(:version => 20120619071456) do
+
+  create_table "articles", :force => true do |t|
+    t.string   "title"
+    t.text     "body"
+    t.text     "footer"
+    t.string   "status"
+    t.string   "author"
+    t.string   "tags"
+    t.string   "path"
+    t.string   "notes"
+    t.integer  "site_id"
+    t.integer  "layout_id"
+    t.string   "redis_hash"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "includes", :force => true do |t|
     t.integer  "site_id"

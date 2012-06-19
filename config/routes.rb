@@ -1,9 +1,11 @@
 City::Application.routes.draw do
 
+  namespace :admin do resources :articles end
+
   namespace :admin do
     resources :users
     resources :sites do
-      resources :layouts, :pages, :includes
+      resources :layouts, :pages, :includes, :articles
     end
   end
 
