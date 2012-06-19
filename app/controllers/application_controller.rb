@@ -11,7 +11,7 @@ class ApplicationController < ActionController::Base
     logger.info request.fullpath
     if site
       render_html(site, request.fullpath.sub("/", ""))
-      render_html_article(site, request.fullpath.sub("/", ""))
+      # render_html_article(site, request.fullpath.sub("/", ""))
     else
       site_not_found
     end
@@ -20,6 +20,7 @@ class ApplicationController < ActionController::Base
   def render_html(site, path)
     logger.debug site.inspect
     page = site.pages.where(path: path).first
+    article = site.articles.where(path: path).first
     if page
       if page.layout # render the page within the layout
         html = $redis.get(page.layout.redis_hash).sub("{{ page }}", $redis.get(page.redis_hash))
@@ -34,15 +35,8 @@ class ApplicationController < ActionController::Base
         render :inline => redis_render
 
       end
-    else
-      render :inline => "Page not found"
-    end
-  end
 
-  def render_html_article(site, path)
-    logger.debug site.inspect
-    article = site.articles.where(path: path).first
-    if article
+    elsif article
       if article.layout # render the article within the layout
         html = $redis.get(article.layout.redis_hash).sub("{{ page }}", $redis.get(article.redis_hash))
         render :inline => html
@@ -60,6 +54,28 @@ class ApplicationController < ActionController::Base
       render :inline => "Page not found"
     end
   end
+
+  # def render_html_article(site, path)
+  #   logger.debug site.inspect
+  #   article = site.articles.where(path: path).first
+  #   if article
+  #     if article.layout # render the article within the layout
+  #       html = $redis.get(article.layout.redis_hash).sub("{{ page }}", $redis.get(article.redis_hash))
+  #       render :inline => html
+  #     else # render just a article with no layout
+
+  #       redis_render = $redis.get(article.redis_hash)
+  #       if !redis_render
+  #         article.create_render
+  #       end
+  #       logger.info "Rendering article from Redis"
+  #       render :inline => redis_render
+
+  #     end
+  #   else
+  #     render :inline => "Page not found"
+  #   end
+  # end
 
   def site_not_found
     render :inline => "Site not found"
