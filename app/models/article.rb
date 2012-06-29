@@ -11,7 +11,8 @@ class Article < ActiveRecord::Base
   has_many :renders, :as => :renderable
 
 
-
+  # timestamp publishing
+  # filter :range, published_at: {lte: Time.zone.now}
 
   private
   def generate_redis_hash
